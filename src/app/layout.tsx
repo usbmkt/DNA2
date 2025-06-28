@@ -16,17 +16,17 @@ const fontMono = JetBrains_Mono({
   display: 'swap',
 });
 
-// Clean and validate the base URL
+// Get base URL with proper fallback
 const getBaseUrl = () => {
-  const nextAuthUrl = process.env.NEXTAUTH_URL?.trim();
-  if (nextAuthUrl) {
-    try {
-      new URL(nextAuthUrl); // Validate URL
-      return nextAuthUrl;
-    } catch {
-      console.warn('Invalid NEXTAUTH_URL, falling back to localhost');
-    }
+  if (typeof window !== 'undefined') {
+    return window.location.origin;
   }
+  
+  const nextAuthUrl = process.env.NEXTAUTH_URL;
+  if (nextAuthUrl) {
+    return nextAuthUrl;
+  }
+  
   return 'http://localhost:3000';
 };
 

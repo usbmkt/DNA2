@@ -6,7 +6,6 @@
   NODE_VERSION = "18"
   NPM_VERSION = "8"
   GENERATE_SOURCEMAP = "false"
-  NEXTAUTH_URL = "https://your-app-name.netlify.app"
 
 [[redirects]]
   from = "/*"

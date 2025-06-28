@@ -36,37 +36,24 @@ const handler = NextAuth({
       return token;
     },
     async redirect({ url, baseUrl }) {
-      // Validate and clean baseUrl with proper error handling
-      let cleanBaseUrl: string;
-      try {
-        // Try to create a URL object to validate baseUrl
-        const baseUrlObj = new URL(baseUrl?.trim() || 'http://localhost:3000');
-        cleanBaseUrl = baseUrlObj.origin;
-      } catch (error) {
-        // If baseUrl is invalid, fallback to localhost
-        console.warn('Invalid baseUrl in redirect callback:', baseUrl, error);
-        cleanBaseUrl = 'http://localhost:3000';
-      }
+      // Ensure baseUrl is properly set
+      const cleanBaseUrl = baseUrl || 'http://localhost:3000';
       
-      // Check if url is null, undefined, or empty after trimming
-      if (!url || !url.trim()) {
+      // Check if url is null, undefined, or empty
+      if (!url) {
         return cleanBaseUrl;
       }
-      
-      const trimmedUrl = url.trim();
       
       // Permite redirecionamentos para URLs do mesmo domínio
-      if (trimmedUrl.startsWith("/")) return `${cleanBaseUrl}${trimmedUrl}`;
+      if (url.startsWith("/")) {
+        return `${cleanBaseUrl}${url}`;
+      }
       
       // Permite redirecionamentos para o domínio base
-      try {
-        const urlObj = new URL(trimmedUrl, cleanBaseUrl);
-        if (urlObj.origin === cleanBaseUrl) return trimmedUrl;
-      } catch (error) {
-        // If URL parsing fails, return baseUrl as fallback
-        console.warn('Invalid URL in redirect callback:', trimmedUrl, error);
-        return cleanBaseUrl;
+      if (url.startsWith(cleanBaseUrl)) {
+        return url;
       }
+      
       return cleanBaseUrl;
     },
   },
