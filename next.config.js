@@ -3,7 +3,18 @@ const nextConfig = {
   experimental: {
   },
   images: {
-    domains: ["lh3.googleusercontent.com"],
+    domains: [
+      "lh3.googleusercontent.com",
+      "images.unsplash.com",
+      "via.placeholder.com",
+      "picsum.photos"
+    ],
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: '**',
+      },
+    ],
   },
   env: {
     NEXTAUTH_URL: process.env.NEXTAUTH_URL,
@@ -27,12 +38,12 @@ const nextConfig = {
             key: 'Content-Security-Policy',
             value: [
               "default-src 'self'",
-              "script-src 'self' 'unsafe-eval' 'unsafe-inline' https://accounts.google.com https://apis.google.com",
-              "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
-              "font-src 'self' https://fonts.gstatic.com",
-              "img-src 'self' data: https: blob:",
-              "media-src 'self' blob:",
-              "connect-src 'self' https://api.deepgram.com https://*.supabase.co https://accounts.google.com https://oauth2.googleapis.com",
+              "script-src 'self' 'unsafe-eval' 'unsafe-inline' https://accounts.google.com https://apis.google.com https://www.gstatic.com",
+              "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://www.gstatic.com",
+              "font-src 'self' https://fonts.gstatic.com data:",
+              "img-src 'self' data: https: blob: https://lh3.googleusercontent.com https://images.unsplash.com https://via.placeholder.com https://picsum.photos",
+              "media-src 'self' blob: data: https:",
+              "connect-src 'self' https://api.deepgram.com https://*.supabase.co https://accounts.google.com https://oauth2.googleapis.com https://www.googleapis.com",
               "frame-src 'self' https://accounts.google.com",
               "object-src 'none'",
               "base-uri 'self'",
@@ -54,6 +65,18 @@ const nextConfig = {
         permanent: true,
       },
     ]
+  },
+  // Add webpack configuration for better compatibility
+  webpack: (config, { isServer }) => {
+    if (!isServer) {
+      config.resolve.fallback = {
+        ...config.resolve.fallback,
+        fs: false,
+        net: false,
+        tls: false,
+      };
+    }
+    return config;
   },
 };
 
