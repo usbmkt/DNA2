@@ -52,8 +52,12 @@ const handler = NextAuth({
   },
   secret: process.env.NEXTAUTH_SECRET,
   debug: process.env.NODE_ENV === 'development',
-  // Explicitly set the URL to handle cases where NEXTAUTH_URL might not be available
-  url: process.env.NEXTAUTH_URL || (process.env.NODE_ENV === 'development' ? 'http://localhost:3000' : undefined),
+  // Ensure NEXTAUTH_URL is always available with fallback logic
+  url: process.env.NEXTAUTH_URL || 
+       (typeof window !== 'undefined' ? window.location.origin : 
+        process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` :
+        process.env.NODE_ENV === 'development' ? 'http://localhost:3000' : 
+        'http://localhost:3000'),
 });
 
 export { handler as GET, handler as POST };
