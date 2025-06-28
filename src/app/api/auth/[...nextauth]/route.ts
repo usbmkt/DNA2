@@ -36,8 +36,17 @@ const handler = NextAuth({
       return token;
     },
     async redirect({ url, baseUrl }) {
-      // Clean baseUrl to remove any whitespace
-      const cleanBaseUrl = baseUrl?.trim() || 'http://localhost:3000';
+      // Validate and clean baseUrl with proper error handling
+      let cleanBaseUrl: string;
+      try {
+        // Try to create a URL object to validate baseUrl
+        const baseUrlObj = new URL(baseUrl?.trim() || 'http://localhost:3000');
+        cleanBaseUrl = baseUrlObj.origin;
+      } catch (error) {
+        // If baseUrl is invalid, fallback to localhost
+        console.warn('Invalid baseUrl in redirect callback:', baseUrl, error);
+        cleanBaseUrl = 'http://localhost:3000';
+      }
       
       // Check if url is null, undefined, or empty after trimming
       if (!url || !url.trim()) {
