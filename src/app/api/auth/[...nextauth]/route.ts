@@ -38,8 +38,15 @@ const handler = NextAuth({
     async redirect({ url, baseUrl }) {
       // Permite redirecionamentos para URLs do mesmo domínio
       if (url.startsWith("/")) return `${baseUrl}${url}`;
-      // Permite redirecionamentos para o domínio base
-      else if (new URL(url).origin === baseUrl) return url;
+      // Permite redirecionamentos para o domínio base - fix URL constructor with baseUrl
+      try {
+        const urlObj = new URL(url, baseUrl);
+        if (urlObj.origin === baseUrl) return url;
+      } catch (error) {
+        // If URL parsing fails, return baseUrl as fallback
+        console.warn('Invalid URL in redirect callback:', url, error);
+        return baseUrl;
+      }
       return baseUrl;
     },
   },
