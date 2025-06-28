@@ -39,16 +39,23 @@ const handler = NextAuth({
       // Clean baseUrl to remove any whitespace
       const cleanBaseUrl = baseUrl?.trim() || 'http://localhost:3000';
       
+      // Check if url is null, undefined, or empty after trimming
+      if (!url || !url.trim()) {
+        return cleanBaseUrl;
+      }
+      
+      const trimmedUrl = url.trim();
+      
       // Permite redirecionamentos para URLs do mesmo domínio
-      if (url.startsWith("/")) return `${cleanBaseUrl}${url}`;
+      if (trimmedUrl.startsWith("/")) return `${cleanBaseUrl}${trimmedUrl}`;
       
       // Permite redirecionamentos para o domínio base
       try {
-        const urlObj = new URL(url.trim(), cleanBaseUrl);
-        if (urlObj.origin === cleanBaseUrl) return url;
+        const urlObj = new URL(trimmedUrl, cleanBaseUrl);
+        if (urlObj.origin === cleanBaseUrl) return trimmedUrl;
       } catch (error) {
         // If URL parsing fails, return baseUrl as fallback
-        console.warn('Invalid URL in redirect callback:', url, error);
+        console.warn('Invalid URL in redirect callback:', trimmedUrl, error);
         return cleanBaseUrl;
       }
       return cleanBaseUrl;
