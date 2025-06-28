@@ -36,18 +36,22 @@ const handler = NextAuth({
       return token;
     },
     async redirect({ url, baseUrl }) {
+      // Clean baseUrl to remove any whitespace
+      const cleanBaseUrl = baseUrl?.trim() || 'http://localhost:3000';
+      
       // Permite redirecionamentos para URLs do mesmo domínio
-      if (url.startsWith("/")) return `${baseUrl}${url}`;
-      // Permite redirecionamentos para o domínio base - fix URL constructor with baseUrl
+      if (url.startsWith("/")) return `${cleanBaseUrl}${url}`;
+      
+      // Permite redirecionamentos para o domínio base
       try {
-        const urlObj = new URL(url, baseUrl);
-        if (urlObj.origin === baseUrl) return url;
+        const urlObj = new URL(url.trim(), cleanBaseUrl);
+        if (urlObj.origin === cleanBaseUrl) return url;
       } catch (error) {
         // If URL parsing fails, return baseUrl as fallback
         console.warn('Invalid URL in redirect callback:', url, error);
-        return baseUrl;
+        return cleanBaseUrl;
       }
-      return baseUrl;
+      return cleanBaseUrl;
     },
   },
   pages: {
@@ -59,10 +63,10 @@ const handler = NextAuth({
   },
   secret: process.env.NEXTAUTH_SECRET,
   debug: process.env.NODE_ENV === 'development',
-  // Ensure NEXTAUTH_URL is always available with fallback logic
-  url: process.env.NEXTAUTH_URL || 
+  // Ensure NEXTAUTH_URL is always available with fallback logic and trim whitespace
+  url: (process.env.NEXTAUTH_URL?.trim()) || 
        (typeof window !== 'undefined' ? window.location.origin : 
-        process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` :
+        process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL.trim()}` :
         process.env.NODE_ENV === 'development' ? 'http://localhost:3000' : 
         'http://localhost:3000'),
 });

@@ -16,8 +16,22 @@ const fontMono = JetBrains_Mono({
   display: 'swap',
 });
 
+// Clean and validate the base URL
+const getBaseUrl = () => {
+  const nextAuthUrl = process.env.NEXTAUTH_URL?.trim();
+  if (nextAuthUrl) {
+    try {
+      new URL(nextAuthUrl); // Validate URL
+      return nextAuthUrl;
+    } catch {
+      console.warn('Invalid NEXTAUTH_URL, falling back to localhost');
+    }
+  }
+  return 'http://localhost:3000';
+};
+
 export const metadata: Metadata = {
-  metadataBase: new URL(process.env.NEXTAUTH_URL || 'http://localhost:3000'),
+  metadataBase: new URL(getBaseUrl()),
   title: 'DNA - Deep Narrative Analysis | Análise Psicológica Avançada',
   description: 'Plataforma profissional de análise narrativa profunda usando IA avançada. Descubra padrões psicológicos através da sua narrativa pessoal.',
   keywords: [
@@ -87,5 +101,3 @@ export default function RootLayout({
     </html>
   );
 }
-
-
