@@ -745,6 +745,9 @@ video {
 .mt-6 {
   margin-top: 1.5rem;
 }
+.mb-1 {
+  margin-bottom: 0.25rem;
+}
 .flex {
   display: flex;
 }
@@ -795,6 +798,9 @@ video {
 }
 .min-h-screen {
   min-height: 100vh;
+}
+.min-h-\[200px\] {
+  min-height: 200px;
 }
 .w-10 {
   width: 2.5rem;
@@ -986,6 +992,13 @@ video {
 .border-transparent {
   border-color: transparent;
 }
+.border-gray-900 {
+  --tw-border-opacity: 1;
+  border-color: rgb(17 24 39 / var(--tw-border-opacity, 1));
+}
+.border-destructive\/50 {
+  border-color: hsl(var(--destructive) / 0.5);
+}
 .bg-background {
   background-color: hsl(var(--background));
 }
@@ -1051,8 +1064,16 @@ video {
   --tw-gradient-to: rgb(240 253 244 / 0) var(--tw-gradient-to-position);
   --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to);
 }
+.from-red-50 {
+  --tw-gradient-from: #fef2f2 var(--tw-gradient-from-position);
+  --tw-gradient-to: rgb(254 242 242 / 0) var(--tw-gradient-to-position);
+  --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to);
+}
 .to-blue-50 {
   --tw-gradient-to: #eff6ff var(--tw-gradient-to-position);
+}
+.to-orange-50 {
+  --tw-gradient-to: #fff7ed var(--tw-gradient-to-position);
 }
 .p-1 {
   padding: 0.25rem;
@@ -1245,6 +1266,13 @@ video {
 .text-white {
   --tw-text-opacity: 1;
   color: rgb(255 255 255 / var(--tw-text-opacity, 1));
+}
+.text-red-600 {
+  --tw-text-opacity: 1;
+  color: rgb(220 38 38 / var(--tw-text-opacity, 1));
+}
+.text-destructive {
+  color: hsl(var(--destructive));
 }
 .underline-offset-4 {
   text-underline-offset: 4px;
@@ -1534,6 +1562,9 @@ video {
 .data-\[state\=open\]\:slide-in-from-top-full[data-state="open"] {
   --tw-enter-translate-y: -100%;
 }
+.dark\:border-destructive:is(.dark *) {
+  border-color: hsl(var(--destructive));
+}
 .dark\:bg-gray-900:is(.dark *) {
   --tw-bg-opacity: 1;
   background-color: rgb(17 24 39 / var(--tw-bg-opacity, 1));
@@ -1577,6 +1608,31 @@ video {
   .md\:grid-cols-3 {
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }
+}
+.\[\&\>svg\+div\]\:translate-y-\[-3px\]>svg+div {
+  --tw-translate-y: -3px;
+  transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
+}
+.\[\&\>svg\]\:absolute>svg {
+  position: absolute;
+}
+.\[\&\>svg\]\:left-4>svg {
+  left: 1rem;
+}
+.\[\&\>svg\]\:top-4>svg {
+  top: 1rem;
+}
+.\[\&\>svg\]\:text-destructive>svg {
+  color: hsl(var(--destructive));
+}
+.\[\&\>svg\]\:text-foreground>svg {
+  color: hsl(var(--foreground));
+}
+.\[\&\>svg\~\*\]\:pl-7>svg~* {
+  padding-left: 1.75rem;
+}
+.\[\&_p\]\:leading-relaxed p {
+  line-height: 1.625;
 }
 
 

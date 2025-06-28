@@ -7,6 +7,13 @@ const handler = NextAuth({
     GoogleProvider({
       clientId: process.env.GOOGLE_CLIENT_ID!,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
+      authorization: {
+        params: {
+          prompt: "consent",
+          access_type: "offline",
+          response_type: "code"
+        }
+      }
     }),
   ],
   adapter: SupabaseAdapter({
@@ -21,12 +28,19 @@ const handler = NextAuth({
       }
       return session;
     },
-    async jwt({ token, user }) {
+    async jwt({ token, user, account }) {
       // Preserva o ID do usuário no token JWT
       if (user) {
         token.sub = user.id;
       }
       return token;
+    },
+    async redirect({ url, baseUrl }) {
+      // Permite redirecionamentos para URLs do mesmo domínio
+      if (url.startsWith("/")) return `${baseUrl}${url}`;
+      // Permite redirecionamentos para o domínio base
+      else if (new URL(url).origin === baseUrl) return url;
+      return baseUrl;
     },
   },
   pages: {
@@ -37,6 +51,7 @@ const handler = NextAuth({
     strategy: 'jwt',
   },
   secret: process.env.NEXTAUTH_SECRET,
+  debug: process.env.NODE_ENV === 'development',
 });
 
 export { handler as GET, handler as POST };

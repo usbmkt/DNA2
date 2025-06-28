@@ -1,6 +1,7 @@
 'use client';
 
 import { signIn, signOut, useSession } from 'next-auth/react';
+import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
@@ -8,11 +9,12 @@ import { LogIn, LogOut, User } from 'lucide-react';
 
 export function AuthComponent() {
   const { data: session, status } = useSession();
+  const router = useRouter();
 
   if (status === 'loading') {
     return (
-      <div className="flex items-center justify-center min-h-screen">
-        <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-green-500"></div>
+      <div className="flex items-center justify-center min-h-[200px]">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-green-500"></div>
       </div>
     );
   }
@@ -45,14 +47,14 @@ export function AuthComponent() {
           
           <div className="flex gap-2">
             <Button 
-              onClick={() => window.location.href = '/dashboard'} 
+              onClick={() => router.push('/dashboard')} 
               className="flex-1"
             >
               Ir para Dashboard
             </Button>
             <Button 
               variant="outline" 
-              onClick={() => signOut()}
+              onClick={() => signOut({ callbackUrl: '/' })}
               className="flex items-center gap-2"
             >
               <LogOut className="h-4 w-4" />
@@ -76,7 +78,7 @@ export function AuthComponent() {
       </CardHeader>
       <CardContent>
         <Button 
-          onClick={() => signIn('google')}
+          onClick={() => signIn('google', { callbackUrl: '/dashboard' })}
           className="w-full flex items-center justify-center gap-2 bg-white text-gray-900 border border-gray-300 hover:bg-gray-50"
         >
           <LogIn className="h-4 w-4" />
@@ -93,4 +95,3 @@ export function AuthComponent() {
     </Card>
   );
 }
-
